@@ -13,4 +13,10 @@ def main(infilename, outfilename):
         outfile.write('\n'.join(lines) + '\n')
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    if 'snakemake' in locals() or 'snakemake' in globals():
+        infilename = snakemake.input.tsv
+        outfilename = snakemake.output.tsv
+    else:
+        infilename = sys.argv[1]
+        outfilename = sys.argv[2]
+    main(infilename, outfilename)
