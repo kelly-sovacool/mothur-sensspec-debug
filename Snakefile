@@ -21,9 +21,10 @@ rule sensspec:
         distfile='data/mouse.ng.dist'
     output:
         tsv='results/mothur-{version}/mouse.{header}_header.sensspec'
-    params:
-        mothur_bin='bin/mothur-{version}/'
     shell:
         """
-        bash {input.sh} {params.mothur_bin} {input.listfile} {input.namefile} {input.distfile}
+        if [[ "{wildcards.version}" == "1.37.0" ]]; then
+            export PATH="bin/mothur-{wildcards.version}/:$PATH"
+        fi
+        bash {input.sh} {input.listfile} {input.namefile} {input.distfile}
         """
