@@ -48,7 +48,7 @@ rule sensspec_count:
 #        version='1.46.1'
     shell:
         """
-        bash {input.sh} {wildcards.version} {input.listfile} {input.namefile} {input.distfile} {log}
+        bash {input.sh} {wildcards.version} {input.listfile} {input.countfile} {input.distfile} {log}
         """
 
 rule mutate_sensspec:
