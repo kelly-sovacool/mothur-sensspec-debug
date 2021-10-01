@@ -28,10 +28,7 @@ rule sensspec:
         tsv='results/mothur-{version}/mouse.{header}_header.sensspec'
     shell:
         """
-        if [[ "{wildcards.version}" == "1.37.0" ]]; then
-            export PATH="bin/mothur-{wildcards.version}/:$PATH"
-        fi
-        bash {input.sh} {input.listfile} {input.namefile} {input.distfile}
+        bash {input.sh} {wildcards.version} {input.listfile} {input.namefile} {input.distfile}
         """
 
 rule mutate_sensspec:
