@@ -58,6 +58,9 @@ rule sensspec:
                     set.dir(input=data/, output="{params.outdir}");
                     sens.spec(list="{input.listfile}", count="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
                     "
+            if [[ "{wildcards.version}" == '1.37.0']]; then
+                touch {output.tsv} # this version doesn't take a count file
+            fi
         else
             echo "File type {wildcards.filetype} not recognized. Must be a names or count_table."
             exit 1
