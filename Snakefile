@@ -1,9 +1,12 @@
+wildcard_constraints:
+    filetype="names|count_table"
+
 rule targets:
     input:
         R='code/concat_sensspec.R',
         tsv=expand('results/mothur-{version}_{filetype}/mouse.{header}_header.mod.sensspec',
                 version = ['1.37.0', '1.46.1'],
-                filetype = ['names', 'count'],
+                filetype = ['names', 'count_table'],
                 header = ['no', 'with'])
     output:
         tsv='results/sensspec_concat.tsv'
@@ -19,36 +22,44 @@ rule prepend_header:
     script:
         'code/prepend-header.py'
 
-rule sensspec_names:
+rule sensspec:
     input:
-        sh='code/sensspec_names.sh',
+        tablefile='data/mouse.ng.{filetype}',
         listfile='data/mouse.{header}_header.list',
-        namefile='data/mouse.ng.names',
         distfile='data/mouse.ng.dist'
     output:
-        tsv='results/mothur-{version}_names/mouse.{header}_header.sensspec'
+        tsv='results/mothur-{version}_{filetype}/mouse.{header}_header.sensspec'
     log:
-        'log/mouse.{header}_header.mothur-{version}.names.log'
+        'log/mouse.{header}_header.mothur-{version}_{filetype}.log'
+    params:
+        outdir='results/mothur-{version}_{filetype}/'
     shell:
         """
-        bash {input.sh} {wildcards.version} {input.listfile} {input.namefile} {input.distfile} {log}
-        """
+        path_version=$(mothur -v | grep version | sed 's/^.*=//')
 
-rule sensspec_count:
-    input:
-        sh='code/sensspec_count.sh',
-        listfile='data/mouse.{header}_header.list',
-        countfile='data/mouse.ng.count_table',
-        distfile='data/mouse.ng.dist'
-    output:
-        tsv='results/mothur-{version}_count/mouse.{header}_header.sensspec'
-    log:
-        'log/mouse.{header}_header.mothur-{version}.count.log'
-#    wildcard_constraints:
-#        version='1.46.1'
-    shell:
-        """
-        bash {input.sh} {wildcards.version} {input.listfile} {input.namefile} {input.distfile} {log}
+        if [[ "{wildcards.version}" == "1.37.0" ]]; then
+            export PATH="$(pwd)/bin/mothur-{wildcards.version}/:$PATH"
+        fi
+        echo PATH is now $PATH
+        if [[ "{wildcards.version}" != "${{path_version}}" ]]; then
+            echo "Error: mothur version requested ({wildcards.version}) is not the same as the one available in the path (${{path_version}})."
+            exit 1
+        fi
+
+        if [[ "{wildcards.filetype}" == "names" ]]; then
+            mothur "#set.logfile(name="{log}");
+                    set.dir(input=data/, output="{params.outdir}");
+                    sens.spec(list="{input.listfile}", name="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
+                    "
+        elif [[ "{wildcards.filetype}" == "count_table" ]]; then
+            mothur "#set.logfile(name="{log}");
+                    set.dir(input=data/, output="{params.outdir}");
+                    sens.spec(list="{input.listfile}", count="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
+                    "
+        else
+            echo "File type {wildcards.filetype} not recognized. Must be a names or count_table."
+            exit 1
+        fi
         """
 
 rule mutate_sensspec:
