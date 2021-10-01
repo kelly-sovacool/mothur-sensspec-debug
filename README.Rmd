@@ -12,7 +12,7 @@ library(here)
 library(tidyverse)
 ```
 
-```{r plot_mcc}
+```{r plot_mcc, dpi=300}
 dat <- read_tsv(here('results', 'sensspec_concat.tsv')) %>% 
   mutate(list_contains_header=recode(list_header,
                                      no='with_header', with='no_header'))
