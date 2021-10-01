@@ -35,24 +35,26 @@ rule sensspec:
         outdir='results/mothur-{version}_{filetype}/'
     shell:
         """
-        path_version=$(mothur -v | grep version | sed 's/^.*=//')
 
         if [[ "{wildcards.version}" == "1.37.0" ]]; then
-            export PATH="$(pwd)/bin/mothur-{wildcards.version}/:$PATH"
+            MOTHUR="bin/mothur-{wildcards.version}/mothur"
+        else
+            MOTHUR="mothur"
         fi
-        echo PATH is now $PATH
-        if [[ "{wildcards.version}" != "${{path_version}}" ]]; then
-            echo "Error: mothur version requested ({wildcards.version}) is not the same as the one available in the path (${{path_version}})."
+
+        avail_version=$($MOTHUR -v | grep version | sed 's/^.*=//')
+        if [[ "${{avail_version}}" != "{wildcards.version}" ]]; then
+            echo "Error: mothur version requested ({wildcards.version}) is not the same as the one available (${{avail_version}})."
             exit 1
         fi
 
         if [[ "{wildcards.filetype}" == "names" ]]; then
-            mothur "#set.logfile(name="{log}");
+            $MOTHUR "#set.logfile(name="{log}");
                     set.dir(input=data/, output="{params.outdir}");
                     sens.spec(list="{input.listfile}", name="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
                     "
         elif [[ "{wildcards.filetype}" == "count_table" ]]; then
-            mothur "#set.logfile(name="{log}");
+            $MOTHUR "#set.logfile(name="{log}");
                     set.dir(input=data/, output="{params.outdir}");
                     sens.spec(list="{input.listfile}", count="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
                     "
