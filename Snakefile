@@ -1,21 +1,26 @@
 rule targets:
     input:
-        expand('results/mothur-{version}/mouse.{header}_header.sensspec',
+        R='code/concat_sensspec.R',
+        tsv=expand('results/mothur-{version}/mouse.{header}_header.sensspec',
                 version = ['1.37.0', '1.46.1'],
                 header = ['no', 'with'])
+    output:
+        tsv='sensspec_concat.tsv'
+    script:
+        'code/concat_sensspec.R'
 
 rule prepend_header:
     input:
         tsv='data/mouse.no_header.list',
-        py='prepend-header.py'
+        py='code/prepend-header.py'
     output:
         tsv='data/mouse.with_header.list'
     script:
-        'prepend-header.py'
+        'code/prepend-header.py'
 
 rule sensspec:
     input:
-        sh='sensspec.sh',
+        sh='code/sensspec.sh',
         listfile='data/mouse.{header}_header.list',
         namefile='data/mouse.ng.names',
         distfile='data/mouse.ng.dist'
@@ -28,3 +33,12 @@ rule sensspec:
         fi
         bash {input.sh} {input.listfile} {input.namefile} {input.distfile}
         """
+
+rule mutate_sensspec:
+    input:
+        R='code/mutate_sensspec.R',
+        tsv=rules.sensspec.output.tsv
+    output:
+        tsv='results/mothur-{version}/mouse.{header}_header.mod.sensspec'
+    script:
+        'code/mutate_sensspec.R'
