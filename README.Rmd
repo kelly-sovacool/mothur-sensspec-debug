@@ -1,0 +1,24 @@
+---
+title: "mothur sens.spec()"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.path = 'figures/')
+```
+```{r deps}
+library(here)
+library(tidyverse)
+```
+
+```{r plot_mcc}
+dat <- read_tsv(here('results', 'sensspec_concat.tsv'))
+head(dat)
+dat %>% ggplot(aes(x=mothur_version, y=mcc, color=list_header)) +
+  geom_point(position = position_jitter(width=0.1, height = 0),
+             size = 5) +
+  ylim(0,1) +
+  theme_bw()
+```
+
