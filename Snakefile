@@ -1,11 +1,11 @@
 rule targets:
     input:
         R='code/concat_sensspec.R',
-        tsv=expand('results/mothur-{version}/mouse.{header}_header.sensspec',
+        tsv=expand('results/mothur-{version}/mouse.{header}_header.mod.sensspec',
                 version = ['1.37.0', '1.46.1'],
                 header = ['no', 'with'])
     output:
-        tsv='sensspec_concat.tsv'
+        tsv='results/sensspec_concat.tsv'
     script:
         'code/concat_sensspec.R'
 
