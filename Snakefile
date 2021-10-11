@@ -22,6 +22,29 @@ rule prepend_header:
     script:
         'code/prepend-header.py'
 
+rule test_fixes:
+    input:
+        count_table='data/mouse.ng.count_table',
+        list='data/mouse.{header}_header.list',
+        dist='data/mouse.ng.dist'
+    #output:
+    #    tsv='results/mothur-1.46.1_count_table/{header}_header_TEST/'
+    params:
+        outdir='results/mothur-1.46.1_count_table/{header}_header_TEST/'
+    log:
+        'log/mouse.{header}_header.mothur-1.46.1_count_table.TEST.log'
+    wildcard_constraints:
+        header='with'
+    shell:
+        """
+        mothur "#set.logfile(name={log});
+                set.dir(input=data/, output={params.outdir});
+                list.seqs(count={input.count_table});
+                get.seqs(list={input.list});
+                sens.spec(list=current, count=current, column={input.dist}, label=userLabel, cutoff=0.03)
+                "
+        """
+
 rule sensspec:
     input:
         tablefile='data/mouse.ng.{filetype}',
