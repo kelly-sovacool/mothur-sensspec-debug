@@ -29,7 +29,8 @@ rule test_fixes:
         dist='data/mouse.ng.dist'
     output:
         accnos='results/mothur-1.46.1_count_table/{with}_header_TEST/mouse.ng.accnos',
-        list='results/mothur-1.46.1_count_table/{header}_header_TEST/mouse.{header}_header.userLabel.pick.list'
+        list='results/mothur-1.46.1_count_table/{header}_header_TEST/mouse.{header}_header.userLabel.pick.list',
+        tsv='results/mothur-1.46.1_count_table/{header}_header_TEST/mouse.{header}_header.userLabel.pick.sensspec'
     params:
         outdir='results/mothur-1.46.1_count_table/{header}_header_TEST/'
     log:
