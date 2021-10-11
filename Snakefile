@@ -27,8 +27,8 @@ rule test_fixes:
         count_table='data/mouse.ng.count_table',
         list='data/mouse.{header}_header.list',
         dist='data/mouse.ng.dist'
-    #output:
-    #    tsv='results/mothur-1.46.1_count_table/{header}_header_TEST/'
+    output:
+        tsv=directory('results/mothur-1.46.1_count_table/{header}_header_TEST/')
     params:
         outdir='results/mothur-1.46.1_count_table/{header}_header_TEST/'
     log:
