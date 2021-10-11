@@ -28,7 +28,7 @@ rule test_fixes:
         list='data/mouse.{header}_header.list',
         dist='data/mouse.ng.dist'
     output:
-        tsv=directory('results/mothur-1.46.1_count_table/{header}_header_TEST/')
+        tsv='results/mothur-1.46.1_count_table/{header}_header_TEST/temp.txt'
     params:
         outdir='results/mothur-1.46.1_count_table/{header}_header_TEST/'
     log:
@@ -43,6 +43,7 @@ rule test_fixes:
                 get.seqs(list={input.list});
                 sens.spec(list=current, count=current, column={input.dist}, label=userLabel, cutoff=0.03)
                 "
+        touch {output.tsv}
         """
 
 rule sensspec:
