@@ -1,12 +1,24 @@
 wildcard_constraints:
     filetype="names|count_table"
 
-rule targets:
+rule render_readme:
+    input:
+        Rmd='README.Rmd',
+        tsv='results/sensspec_concat.tsv'
+    output:
+        md='README.md'
+    shell:
+        """
+        R -e "rmarkdown::render('{input.Rmd}')"
+        """
+
+rule concat_sensspec:
     input:
         R='code/concat_sensspec.R',
-        tsv=expand('results/mothur-{version}_{filetype}/mouse.{header}_header.mod.sensspec',
+        tsv=expand('results/mothur-{version}_{filetype}/mouse.{method}.{header}_header.mod.sensspec',
                 version = ['1.37.0', '1.46.1'],
                 filetype = ['names', 'count_table'],
+                method = ['de_novo', 'closed'],
                 header = ['no', 'with'])
     output:
         tsv='results/sensspec_concat.tsv'
@@ -15,20 +27,20 @@ rule targets:
 
 rule prepend_header:
     input:
-        tsv='data/mouse.no_header.list',
+        tsv='data/mouse.de_novo.no_header.list',
         py='code/prepend-header.py'
     output:
-        tsv='data/mouse.with_header.list'
+        tsv='data/mouse.de_novo.with_header.list'
     script:
         'code/prepend-header.py'
 
 rule test_fixes:
     input:
         count_table='data/mouse.ng.count_table',
-        list='data/mouse.{header}_header.list',
+        list='data/mouse.{method}.{header}_header.list',
         dist='data/mouse.ng.dist'
     output:
-        accnos='results/mothur-1.46.1_count_table/{with}_header_TEST/mouse.ng.accnos',
+        accnos='results/mothur-1.46.1_count_table/{header}_header_TEST/mouse.ng.accnos',
         list='results/mothur-1.46.1_count_table/{header}_header_TEST/mouse.{header}_header.userLabel.pick.list',
         tsv='results/mothur-1.46.1_count_table/{header}_header_TEST/mouse.{header}_header.userLabel.pick.sensspec'
     params:
@@ -50,12 +62,12 @@ rule test_fixes:
 rule sensspec:
     input:
         tablefile='data/mouse.ng.{filetype}',
-        listfile='data/mouse.{header}_header.list',
+        listfile='data/mouse.{method}.{header}_header.list',
         distfile='data/mouse.ng.dist'
     output:
-        tsv='results/mothur-{version}_{filetype}/mouse.{header}_header.sensspec'
+        tsv='results/mothur-{version}_{filetype}/mouse.{method}.{header}_header.sensspec'
     log:
-        'log/mouse.{header}_header.mothur-{version}_{filetype}.log'
+        'log/mouse.{method}.{header}_header.mothur-{version}_{filetype}.log'
     params:
         outdir='results/mothur-{version}_{filetype}/'
     shell:
@@ -96,8 +108,8 @@ rule sensspec:
 rule mutate_sensspec:
     input:
         R='code/mutate_sensspec.R',
-        tsv='results/mothur-{version}_{filetype}/mouse.{header}_header.sensspec'
+        tsv='results/mothur-{version}_{filetype}/mouse.{method}.{header}_header.sensspec'
     output:
-        tsv='results/mothur-{version}_{filetype}/mouse.{header}_header.mod.sensspec'
+        tsv='results/mothur-{version}_{filetype}/mouse.{method}.{header}_header.mod.sensspec'
     script:
         'code/mutate_sensspec.R'

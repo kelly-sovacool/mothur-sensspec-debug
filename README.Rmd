@@ -13,14 +13,14 @@ library(tidyverse)
 ```
 
 ```{r plot_mcc, dpi=300}
-dat <- read_tsv(here('results', 'sensspec_concat.tsv')) %>% 
+dat <- read_tsv(here('results', 'sensspec_concat.tsv')) %>%
   mutate(list_contains_header=recode(list_header,
                                      no='with_header', with='no_header'))
 head(dat)
-dat %>% ggplot(aes(x=mothur_version, y=mcc, color=filetype)) +
+dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method)) +
   geom_point(position = position_jitter(width=0.1, height = 0),
              size = 5, alpha=0.7) +
-  facet_wrap("list_contains_header") +
+  #facet_wrap("list_contains_header") +
   ylim(0,1) +
   theme_bw()
 ```
