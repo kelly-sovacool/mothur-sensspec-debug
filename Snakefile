@@ -31,14 +31,15 @@ rule sensspec_count:
         list='data/{dataset}.{method}.list',
         dist='data/{dataset}.unique.dist'
     output:
-        accnos='results/mothur-1.46.1_count_table/{method}/{dataset}.ng.accnos',
-        list='results/mothur-1.46.1_count_table/{method}/{dataset}.{method}.userLabel.pick.list',
-        tsv='results/mothur-1.46.1_count_table/{method}/{dataset}.{method}.sensspec'
+        accnos='results/mothur-{version}_count_table/{method}/{dataset}.ng.accnos',
+        list='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.list',
+        tsv='results/mothur-{version}_count_table/{method}/{dataset}.{method}.sensspec'
     params:
-        outdir='results/mothur-1.46.1_count_table/{method}/',
-        sensspec='results/mothur-1.46.1_count_table/{method}/{dataset}.{method}.userLabel.pick.sensspec'
+        outdir='results/mothur-{version}_count_table/{method}/',
+        sensspec='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.sensspec',
+        version='1.46.1'
     log:
-        'log/{dataset}.{method}.mothur-1.46.1_count_table.log'
+        'log/{dataset}.{method}.mothur-{version}_count_table.log'
     shell:
         """
         if [[ "{wildcards.version}" == "1.37.0" ]]; then
