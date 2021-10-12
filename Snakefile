@@ -13,7 +13,7 @@ rule concat_sensspec:
     input:
         R='code/concat_sensspec.R',
         tsv=[f'results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.mod.sensspec'
-            for dataset in ['miseq_1.0_01']
+            for dataset in ['mouse']#['miseq_1.0_01']
             for version, filetype in zip(['1.37.0', '1.46.1'],
                                          ['names', 'count_table']
                                          )
