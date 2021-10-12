@@ -37,12 +37,14 @@ rule calc_dists:
         outdir='data/'
     log:
         'log/calc_dists.miseq_1.0_01.log'
+    resources:
+        procs=8
     shell:
         """
         mothur '#set.logfile(name={log}); set.dir(output={params.outdir});
             unique.seqs(fasta={input.fna});
             count.seqs(name=current);
-            dist.seqs(fasta=current, cutoff={params.label}, processors={resources.procs});
+            dist.seqs(fasta=current, cutoff=0.03, processors={resources.procs});
             '
         """
 
