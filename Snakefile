@@ -16,7 +16,7 @@ rule concat_sensspec:
                 dataset = ['miseq_1.0_01'],
                 version = ['1.37.0', '1.46.1'],
                 filetype = ['names'],
-                method = ['vdgc', 'cvsearch'])
+                method = ['vdgc'])#, 'cvsearch'])
     output:
         tsv='results/sensspec_concat.tsv'
     script:
@@ -97,7 +97,7 @@ rule sensspec:
 rule mutate_sensspec:
     input:
         R='code/mutate_sensspec.R',
-        tsv='results/mothur-{version}_{filetype}/{dataset}.{method}.sensspec'
+        tsv=rules.sensspec.output.tsv
     output:
         tsv='results/mothur-{version}_{filetype}/{dataset}.{method}.mod.sensspec'
     script:
