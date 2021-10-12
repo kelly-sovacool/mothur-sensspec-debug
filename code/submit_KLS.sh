@@ -15,8 +15,8 @@
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=2
-#SBATCH --mem-per-cpu=500MB
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=8GB
 #SBATCH --time=96:00:00
 
 #SBATCH --output=log/slurm-%j_%x.out
@@ -35,4 +35,4 @@
 #SBATCH --mail-user=sovacool@umich.edu
 #SBATCH --mail-type=BEGIN,END
 
-snakemake -j 2
+snakemake -j 4
