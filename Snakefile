@@ -25,32 +25,32 @@ rule concat_sensspec:
         'code/concat_sensspec.R'
 
 
-rule get_count:
-    input:
-        fna="data/miseq_1.0_01.ng.fasta"
-    output:
-        fna="data/miseq_1.0_01.ng.unique.fasta",
-        names="data/miseq_1.0_01.ng.names",
-        ct="data/miseq_1.0_01.ng.count_table"
-    params:
-        outdir='data/'
-    log:
-        'log/calc_dists.miseq_1.0_01.log'
-    resources:
-        procs=8
-    shell:
-        """
-        mothur '#set.logfile(name={log}); set.dir(output={params.outdir});
-            unique.seqs(fasta={input.fna});
-            count.seqs(name=current);
-            '
-        """
+# rule get_count:
+#     input:
+#         fna="data/miseq_1.0_01.ng.fasta"
+#     output:
+#         fna="data/miseq_1.0_01.ng.unique.fasta",
+#         names="data/miseq_1.0_01.ng.names",
+#         ct="data/miseq_1.0_01.ng.count_table"
+#     params:
+#         outdir='data/'
+#     log:
+#         'log/calc_dists.miseq_1.0_01.log'
+#     resources:
+#         procs=8
+#     shell:
+#         """
+#         mothur '#set.logfile(name={log}); set.dir(output={params.outdir});
+#             unique.seqs(fasta={input.fna});
+#             count.seqs(name=current);
+#             '
+#         """
 
 rule sensspec_count:
     input:
-        count_table='data/{dataset}.ng.count_table',
+        count_table='data/{dataset}.count_table',
         list='data/{dataset}.{method}.list',
-        dist='data/{dataset}.ng.unique.dist'
+        dist='data/{dataset}.unique.dist'
     output:
         accnos='results/mothur-{version}_count_table/{method}/{dataset}.ng.accnos',
         list='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.list',
