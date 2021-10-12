@@ -12,53 +12,61 @@ rule render_readme:
 rule concat_sensspec:
     input:
         R='code/concat_sensspec.R',
-        tsv=expand('results/mothur-{version}_{filetype}/{dataset}.{method}.mod.sensspec',
-                dataset = ['miseq_1.0_01'],
-                version = ['1.37.0', '1.46.1'],
-                filetype = ['names'],
-                method = ['vdgc', 'cvsearch'])
+        tsv=[f'results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.mod.sensspec'
+            for dataset in ['miseq_1.0_01']
+            for version, filetype in zip(['1.37.0', '1.46.1'],
+                                         ['names', 'count_table']
+                                         )
+            for method in ['vdgc', 'cvsearch']
+            ]
     output:
         tsv='results/sensspec_concat.tsv'
     script:
         'code/concat_sensspec.R'
 
 
-rule test_fixes:
+rule sensspec_count:
     input:
         count_table='data/{dataset}.ng.count_table',
-        list='data/{dataset}.{method}.{header}_header.list',
-        dist='data/{dataset}.ng.dist'
+        list='data/{dataset}.{method}.list',
+        dist='data/{dataset}.unique.dist'
     output:
-        accnos='results/mothur-1.46.1_count_table/{header}_header_TEST/{dataset}.ng.accnos',
-        list='results/mothur-1.46.1_count_table/{header}_header_TEST/{dataset}.{header}_header.userLabel.pick.list',
-        tsv='results/mothur-1.46.1_count_table/{header}_header_TEST/{dataset}.{header}_header.userLabel.pick.sensspec'
+        accnos='results/mothur-1.46.1_count_table/{method}/{dataset}.ng.accnos',
+        list='results/mothur-1.46.1_count_table/{method}/{dataset}.{method}.userLabel.pick.list',
+        tsv='results/mothur-1.46.1_count_table/{method}/{dataset}.{method}.sensspec'
     params:
-        outdir='results/mothur-1.46.1_count_table/{header}_header_TEST/'
+        outdir='results/mothur-1.46.1_count_table/{method}/',
+        sensspec='results/mothur-1.46.1_count_table/{method}/{dataset}.{method}.userLabel.pick.sensspec'
     log:
-        'log/{dataset}.{header}_header.mothur-1.46.1_count_table.TEST.log'
-    wildcard_constraints:
-        header='with'
+        'log/{dataset}.{method}.mothur-1.46.1_count_table.log'
     shell:
         """
-        mothur "#set.logfile(name={log});
-                set.dir(input=data/, output={params.outdir});
-                list.seqs(count={input.count_table});
-                get.seqs(list={input.list});
-                sens.spec(list=current, count=current, column={input.dist}, label=userLabel, cutoff=0.03)
-                "
+        if [[ "{wildcards.version}" == "1.37.0" ]]; then
+            for f in {output}; do
+                touch $f;
+            done
+        else
+            mothur "#set.logfile(name={log});
+                    set.dir(input=data/, output={params.outdir});
+                    list.seqs(count={input.count_table});
+                    get.seqs(list={input.list});
+                    sens.spec(list=current, count=current, column={input.dist}, label=userLabel, cutoff=0.03)
+                    "
+            cp {params.sensspec} {output.tsv}
+        fi
         """
 
-rule sensspec:
+rule sensspec_names:
     input:
-        tablefile='data/{dataset}.{filetype}',
+        tablefile='data/{dataset}.names',
         listfile='data/{dataset}.{method}.list',
         distfile='data/{dataset}.unique.dist'
     output:
-        tsv='results/mothur-{version}_{filetype}/{dataset}.{method}.sensspec'
+        tsv='results/mothur-{version}_names/{method}/{dataset}.{method}.sensspec'
     log:
-        'log/{dataset}.{method}.mothur-{version}_{filetype}.log'
+        'log/{dataset}.{method}.mothur-{version}_names.log'
     params:
-        outdir='results/mothur-{version}_{filetype}/'
+        outdir='results/mothur-{version}_names/'
     shell:
         """
 
@@ -97,8 +105,8 @@ rule sensspec:
 rule mutate_sensspec:
     input:
         R='code/mutate_sensspec.R',
-        tsv=rules.sensspec.output.tsv
+        tsv='results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.sensspec'
     output:
-        tsv='results/mothur-{version}_{filetype}/{dataset}.{method}.mod.sensspec'
+        tsv='results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.mod.sensspec'
     script:
         'code/mutate_sensspec.R'
