@@ -104,24 +104,10 @@ rule sensspec_names:
             exit 1
         fi
 
-        if [[ "{wildcards.filetype}" == "names" ]]; then
-            $MOTHUR "#set.logfile(name="{log}");
-                    set.dir(input=data/, output="{params.outdir}");
-                    sens.spec(list="{input.listfile}", name="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
-                    "
-        elif [[ "{wildcards.filetype}" == "count_table" ]]; then
-            if [[ "{wildcards.version}" == '1.37.0' ]]; then
-                touch {output.tsv} # this version doesn't take a count file
-            else
-                $MOTHUR "#set.logfile(name="{log}");
-                    set.dir(input=data/, output="{params.outdir}");
-                    sens.spec(list="{input.listfile}", count="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
-                    "
-            fi
-        else
-            echo "File type {wildcards.filetype} not recognized. Must be a names or count_table."
-            exit 1
-        fi
+        $MOTHUR "#set.logfile(name="{log}");
+                set.dir(input=data/, output="{params.outdir}");
+                sens.spec(list="{input.listfile}", name="{input.tablefile}", column="{input.distfile}", label=userLabel, cutoff=0.03)
+                "
         """
 
 rule mutate_sensspec:
