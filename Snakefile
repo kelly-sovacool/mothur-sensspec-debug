@@ -88,7 +88,7 @@ rule sensspec_names:
     log:
         'log/{dataset}.{method}.mothur-{version}_names.log'
     params:
-        outdir='results/mothur-{version}_names/'
+        outdir='results/mothur-{version}_names/{method}/'
     shell:
         """
 
