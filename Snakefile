@@ -25,14 +25,13 @@ rule concat_sensspec:
         'code/concat_sensspec.R'
 
 
-rule calc_dists:
+rule get_count:
     input:
         fna="data/miseq_1.0_01.ng.fasta"
     output:
         fna="data/miseq_1.0_01.ng.unique.fasta",
         names="data/miseq_1.0_01.ng.names",
-        ct="data/miseq_1.0_01.ng.count_table",
-        dist="data/miseq_1.0_01.ng.unique.dist"
+        ct="data/miseq_1.0_01.ng.count_table"
     params:
         outdir='data/'
     log:
@@ -44,7 +43,6 @@ rule calc_dists:
         mothur '#set.logfile(name={log}); set.dir(output={params.outdir});
             unique.seqs(fasta={input.fna});
             count.seqs(name=current);
-            dist.seqs(fasta=current, cutoff=0.03, processors={resources.procs});
             '
         """
 
