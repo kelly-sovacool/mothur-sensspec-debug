@@ -17,7 +17,7 @@ library(tidyverse)
 ```{r plot_mcc, dpi=300}
 dat <- read_tsv(here('results', 'sensspec_concat.tsv'))
 head(dat)
-dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method)) +
+dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method, shape=dataset)) +
   geom_point(position = position_jitter(width=0.1, height = 0),
              size = 5, alpha=0.7) +
   ylim(0,1) +
