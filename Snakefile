@@ -52,7 +52,7 @@ rule sensspec_count:
         list='data/{dataset}.{method}.list',
         dist='data/{dataset}.unique.dist'
     output:
-        accnos='results/mothur-{version}_count_table/{method}/{dataset}.ng.accnos',
+        accnos='results/mothur-{version}_count_table/{method}/{dataset}.accnos',
         list='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.list',
         tsv='results/mothur-{version}_count_table/{method}/{dataset}.{method}.sensspec'
     params:
