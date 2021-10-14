@@ -42,7 +42,7 @@ rule summary:
         """
         mothur "#set.logfile(name={log});
                 set.dir(input=data/, output={params.outdir});
-                summary.single(list={input.list}, calc=sobs)
+                summary.single(list={input.list}, calc=sobs-npshannon)
                 "
         """
 
