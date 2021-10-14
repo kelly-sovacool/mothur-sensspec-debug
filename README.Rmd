@@ -14,9 +14,13 @@ library(here)
 library(tidyverse)
 ```
 
-```{r plot_mcc, dpi=300}
+```{r summary}
 dat <- read_tsv(here('results', 'sensspec_concat.tsv'))
-head(dat)
+dat %>% select(dataset, cluster_method, mothur_version, filetype, mcc, sobs, numotus)
+```
+
+
+```{r plot_mcc, dpi=300}
 dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method, shape=dataset)) +
   geom_point(position = position_jitter(width=0.1, height = 0),
              size = 5, alpha=0.7) +
