@@ -23,7 +23,7 @@ rule concat_results:
     output:
         tsv='results/sensspec_concat.tsv'
     script:
-        'code/concat_sensspec.R'
+        'code/concat_tsv.R'
 
 rule summary:
     input:
