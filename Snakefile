@@ -1,3 +1,7 @@
+wildcard_constraints:
+    version="1.37.0|1.46.1",
+    filetype='names|count_table'
+
 rule render_readme:
     input:
         Rmd='README.Rmd',
