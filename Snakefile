@@ -9,10 +9,10 @@ rule render_readme:
         R -e "rmarkdown::render('{input.Rmd}')"
         """
 
-rule concat_sensspec:
+rule concat_results:
     input:
-        R='code/concat_sensspec.R',
-        tsv=[f'results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.mod.sensspec'
+        R='code/concat_tsv.R',
+        tsv=[f'results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.tsv'
             for dataset, version, filetype in zip(
                                             ['miseq_1.0_01', 'mouse', 'mouse'],
                                             ['1.37.0', '1.37.0', '1.46.1'],
@@ -25,27 +25,22 @@ rule concat_sensspec:
     script:
         'code/concat_sensspec.R'
 
-
-# rule get_count:
-#     input:
-#         fna="data/miseq_1.0_01.ng.fasta"
-#     output:
-#         fna="data/miseq_1.0_01.ng.unique.fasta",
-#         names="data/miseq_1.0_01.ng.names",
-#         ct="data/miseq_1.0_01.ng.count_table"
-#     params:
-#         outdir='data/'
-#     log:
-#         'log/calc_dists.miseq_1.0_01.log'
-#     resources:
-#         procs=8
-#     shell:
-#         """
-#         mothur '#set.logfile(name={log}); set.dir(output={params.outdir});
-#             unique.seqs(fasta={input.fna});
-#             count.seqs(name=current);
-#             '
-#         """
+rule summary:
+    input:
+        list='data/{dataset}.{method}.list'
+    output:
+        sum='data/{dataset}.{method}.summary'
+    params:
+        outdir='data/'
+    log:
+        'log/summary.single.{dataset}.{method}.log'
+    shell:
+        """
+        mothur "#set.logfile(name={log});
+                set.dir(input=data/, output={params.outdir});
+                summary.single(list={input.list}, calc=sobs)
+                "
+        """
 
 rule sensspec_count:
     input:
@@ -114,8 +109,9 @@ rule sensspec_names:
 rule mutate_sensspec:
     input:
         R='code/mutate_sensspec.R',
-        tsv='results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.sensspec'
+        sensspec='results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.sensspec',
+        summary=rules.summary.output.sum
     output:
-        tsv='results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.mod.sensspec'
+        tsv='results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.tsv'
     script:
         'code/mutate_sensspec.R'
