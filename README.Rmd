@@ -16,7 +16,9 @@ library(tidyverse)
 
 ```{r summary}
 dat <- read_tsv(here('results', 'sensspec_concat.tsv'))
-dat %>% select(dataset, cluster_method, mothur_version, filetype, mcc, sobs, numotus)
+dat %>% 
+  select(dataset, cluster_method, mothur_version, filetype, mcc, sobs, numotus) %>%
+  knitr::kable()
 ```
 
 

@@ -25,22 +25,19 @@ dat <- read_tsv(here('results', 'sensspec_concat.tsv'))
     ## ℹ Use `spec()` for the full column specifications.
 
 ``` r
-head(dat)
+dat %>% 
+  select(dataset, cluster_method, mothur_version, filetype, mcc, sobs, numotus) %>%
+  knitr::kable()
 ```
 
-    ## # A tibble: 6 x 22
-    ##   label...1 cutoff     tp     tn     fp     fn sensitivity specificity   ppv
-    ##   <chr>      <dbl>  <dbl>  <dbl>  <dbl>  <dbl>       <dbl>       <dbl> <dbl>
-    ## 1 userLabel   0.03 6.38e6 6.32e8 3.07e6 5.54e5       0.920       0.995 0.675
-    ## 2 userLabel   0.03 5.47e6 4.96e8 2.81e6 1.47e6       0.789       0.994 0.661
-    ## 3 userLabel   0.03 6.28e6 6.33e8 3.23e6 5.53e5       0.919       0.995 0.660
-    ## 4 userLabel   0.03 5.37e6 6.26e8 1.11e7 1.46e6       0.786       0.983 0.326
-    ## 5 userLabel   0.03 6.28e6 6.33e8 3.23e6 5.53e5       0.919       0.995 0.660
-    ## 6 userLabel   0.03 5.37e6 6.26e8 1.11e7 1.46e6       0.786       0.983 0.326
-    ## # … with 13 more variables: npv <dbl>, fdr <dbl>, accuracy <dbl>, mcc <dbl>,
-    ## #   f1score <dbl>, mothur_version <chr>, dataset <chr>, filetype <chr>,
-    ## #   cluster_method <chr>, label...19 <chr>, sobs <dbl>, numotus <dbl>,
-    ## #   label...20 <chr>
+| dataset        | cluster\_method | mothur\_version | filetype     |    mcc | sobs | numotus |
+| :------------- | :-------------- | :-------------- | :----------- | -----: | ---: | ------: |
+| miseq\_1.0\_01 | vdgc            | 1.37.0          | names        | 0.7857 | 2114 |      NA |
+| miseq\_1.0\_01 | cvsearch        | 1.37.0          | names        | 0.7178 |  862 |      NA |
+| mouse          | vdgc            | 1.37.0          | names        | 0.7762 | 2113 |      NA |
+| mouse          | cvsearch        | 1.37.0          | names        | 0.4991 |  870 |      NA |
+| mouse          | vdgc            | 1.46.1          | count\_table | 0.7762 | 2113 |    2113 |
+| mouse          | cvsearch        | 1.46.1          | count\_table | 0.4991 |  870 |     870 |
 
 ``` r
 dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method, shape=dataset)) +
