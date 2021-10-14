@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ```{r deps, message=FALSE, warning=FALSE}
 library(here)
 library(tidyverse)
+set.seed(20211014)
 ```
 
 ```{r summary}

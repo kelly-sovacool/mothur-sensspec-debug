@@ -4,6 +4,7 @@ mothur sens.spec()
 ``` r
 library(here)
 library(tidyverse)
+set.seed(20211014)
 ```
 
 ``` r
