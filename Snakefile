@@ -70,6 +70,13 @@ rule unique_count:
                 "
         """
 
+rule copy_count:
+    input:
+        'data/proc/{dataset}.ng.count_table'
+    output:
+        'data/{dataset}.count_table'
+    shell:
+        "cp {input} {output}"
 
 
 rule sensspec_count:
