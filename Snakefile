@@ -33,9 +33,9 @@ rule summary:
     input:
         list='data/{dataset}.{method}.list'
     output:
-        sum='data/{dataset}.{method}.summary'
+        sum='data/proc/{dataset}.{method}.summary'
     params:
-        outdir='data/'
+        outdir='data/proc/'
     log:
         'log/summary.single.{dataset}.{method}.log'
     shell:
@@ -45,6 +45,28 @@ rule summary:
                 summary.single(list={input.list}, calc=sobs-npshannon)
                 "
         """
+
+
+rule unique_count:
+    input:
+        fna='data/{dataset}.fasta'
+    output:
+        fna='data/{dataset}.unique.fasta',
+        count_table='data/{dataset}.unique.count_table'
+    params:
+        outdir='data/proc/'
+    log:
+        'log/unique_count.{dataset}.log'
+    shell:
+        """
+        mothur "#set.logfile(name={log});
+                set.dir(input=data/, output={params.outdir});
+                unique.seqs(fasta={input.fasta});
+                count.seqs(name=current)
+                "
+        """
+
+
 
 rule sensspec_count:
     input:
