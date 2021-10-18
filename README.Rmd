@@ -32,15 +32,16 @@ dat %>%
 
 
 ```{r plot_mcc}
-dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method, shape=dataset)) +
+dat %>% ggplot(aes(x=mothur_version, y=mcc, color=dataset, shape=filetype)) +
   geom_point(position = position_jitter(width=0.1, height = 0),
              size = 5, alpha=0.7) +
+  facet_wrap("cluster_method") +
   ylim(0,1) +
   theme_bw()
 ```
 
 ```{r for_lab_mtg}
-dat %>% ggplot(aes(x=mothur_version, y=mcc, color=paper)) +
+dat %>% ggplot(aes(x=mothur_version, y=mcc, color=paper, shape=filetype)) +
   geom_point(position = position_jitter(width=0.1, height = 0),
              size = 5, alpha=0.7) +
   facet_wrap('method') +
