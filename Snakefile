@@ -51,8 +51,8 @@ rule unique_count:
     input:
         fna='data/{dataset}.fasta'
     output:
-        fna='data/{dataset}.unique.fasta',
-        count_table='data/{dataset}.unique.count_table'
+        fna='data/proc/{dataset}.unique.fasta',
+        count_table='data/proc/{dataset}.unique.count_table'
     params:
         outdir='data/proc/'
     log:
