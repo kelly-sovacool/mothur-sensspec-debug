@@ -18,19 +18,19 @@ dat <- read_tsv(here('results', 'sensspec_concat.tsv')) %>%
                             TRUE ~ 'unknown'))
 ```
 
-    ## New names:
-    ## * label...20 -> label...22
-
-    ## Rows: 6 Columns: 22
-
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: "\t"
-    ## chr  (7): label...1, mothur_version, dataset, filetype, cluster_method, labe...
-    ## dbl (15): cutoff, tp, tn, fp, fn, sensitivity, specificity, ppv, npv, fdr, a...
-
     ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## cols(
+    ##   .default = col_double(),
+    ##   label...1 = col_character(),
+    ##   mothur_version = col_character(),
+    ##   dataset = col_character(),
+    ##   filetype = col_character(),
+    ##   cluster_method = col_character(),
+    ##   label...20 = col_character(),
+    ##   label...19 = col_character()
+    ## )
+    ## ℹ Use `spec()` for the full column specifications.
 
 ``` r
 dat %>% 
@@ -38,14 +38,16 @@ dat %>%
   knitr::kable()
 ```
 
-| dataset      | cluster_method | mothur_version | filetype    |    mcc | num_otus |
-|:-------------|:---------------|:---------------|:------------|-------:|---------:|
-| miseq_1.0_01 | vdgc           | 1.37.0         | names       | 0.7857 |     2114 |
-| miseq_1.0_01 | cvsearch       | 1.37.0         | names       | 0.7178 |      862 |
-| mouse        | vdgc           | 1.37.0         | names       | 0.7762 |     2113 |
-| mouse        | cvsearch       | 1.37.0         | names       | 0.4991 |      870 |
-| mouse        | vdgc           | 1.46.1         | count_table | 0.7762 |     2113 |
-| mouse        | cvsearch       | 1.46.1         | count_table | 0.4991 |      870 |
+| dataset        | cluster\_method | mothur\_version | filetype     |    mcc | num\_otus |
+| :------------- | :-------------- | :-------------- | :----------- | -----: | --------: |
+| miseq\_1.0\_01 | vdgc            | 1.46.1          | names        | 0.0000 |      2114 |
+| miseq\_1.0\_01 | cvsearch        | 1.46.1          | names        | 0.0000 |       862 |
+| miseq\_1.0\_01 | vdgc            | 1.37.0          | names        | 0.7857 |      2114 |
+| miseq\_1.0\_01 | cvsearch        | 1.37.0          | names        | 0.7178 |       862 |
+| mouse          | vdgc            | 1.37.0          | names        | 0.7762 |      2113 |
+| mouse          | cvsearch        | 1.37.0          | names        | 0.4991 |       870 |
+| mouse          | vdgc            | 1.46.1          | count\_table | 0.7762 |      2113 |
+| mouse          | cvsearch        | 1.46.1          | count\_table | 0.4991 |       870 |
 
 ``` r
 dat %>% ggplot(aes(x=mothur_version, y=mcc, color=cluster_method, shape=dataset)) +
