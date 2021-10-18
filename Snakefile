@@ -20,7 +20,7 @@ rule concat_results:
             for dataset, version, filetype in zip(
                                             ['miseq_1.0_01', 'miseq_1.0_01', 'mouse', 'mouse'],
                                             ['1.46.1', '1.37.0', '1.37.0', '1.46.1'],
-                                            ['count_table', 'names', 'names', 'count_table']
+                                            ['names', 'names', 'names', 'count_table']
                                             )
             for method in ['vdgc', 'cvsearch']
             ]
