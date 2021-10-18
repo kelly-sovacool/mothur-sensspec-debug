@@ -63,7 +63,9 @@ dat %>% ggplot(aes(x=mothur_version, y=mcc, color=paper)) +
              size = 5, alpha=0.7) +
   facet_wrap('method') +
   ylim(0,1) +
-  theme_bw()
+  theme_bw() +
+  theme(legend.position = 'top',
+        legend.title = element_blank())
 ```
 
 ![](figures/for_lab_mtg-1.png)<!-- -->
