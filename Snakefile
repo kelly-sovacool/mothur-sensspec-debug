@@ -78,11 +78,30 @@ rule copy_count:
     shell:
         "cp {input} {output}"
 
-
-rule sensspec_count:
+rule prep_list:
     input:
         count_table='data/{dataset}.count_table',
         list='data/{dataset}.{method}.list',
+    output:
+        accnos='results/mothur-{version}_count_table/{method}/{dataset}.accnos',
+        list='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.list'
+    params:
+        outdir='results/mothur-{version}_count_table/{method}/'
+    log:
+        'log/prep_list.{dataset}.{method}.mothur-{version}_count_table.log'
+    shell:
+        """
+        mothur "#set.logfile(name={log});
+                set.dir(input=data/, output={params.outdir});
+                list.seqs(count={input.count_table});
+                get.seqs(list={input.list}, accnos=current);
+                "
+        """
+
+rule sensspec_count:
+    input:
+        list=rules.prep_list.output.list,
+        count_table='data/{dataset}.count_table',
         dist='data/{dataset}.unique.dist'
     output:
         accnos='results/mothur-{version}_count_table/{method}/{dataset}.accnos',
@@ -90,8 +109,7 @@ rule sensspec_count:
         tsv='results/mothur-{version}_count_table/{method}/{dataset}.{method}.sensspec'
     params:
         outdir='results/mothur-{version}_count_table/{method}/',
-        sensspec='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.sensspec',
-        version='1.46.1'
+        sensspec='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.sensspec'
     log:
         'log/{dataset}.{method}.mothur-{version}_count_table.log'
     shell:
@@ -103,9 +121,7 @@ rule sensspec_count:
         else
             mothur "#set.logfile(name={log});
                     set.dir(input=data/, output={params.outdir});
-                    list.seqs(count={input.count_table});
-                    get.seqs(list={input.list});
-                    sens.spec(list=current, count=current, column={input.dist}, label=userLabel, cutoff=0.03)
+                    sens.spec(list={input.list}, count={input.count_table}, column={input.dist}, label=userLabel, cutoff=0.03)
                     "
             cp {params.sensspec} {output.tsv}
         fi
