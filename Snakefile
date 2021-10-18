@@ -1,6 +1,11 @@
+datasets = ['miseq_1.0_01', 'mouse']
+versions = ['1.37.0', '1.46.1']
+filetypes = ['names', 'count_table']
+methods = ['vdgc', 'cvsearch']
+
 wildcard_constraints:
-    version="1.37.0|1.46.1",
-    filetype='names|count_table'
+    version="|".join(versions),
+    filetype="|".join(filetypes)
 
 rule render_readme:
     input:
@@ -16,14 +21,12 @@ rule render_readme:
 rule concat_results:
     input:
         R='code/concat_tsv.R',
-        tsv=[f'results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.tsv'
-            for dataset, version, filetype in zip(
-                                            ['miseq_1.0_01', 'miseq_1.0_01', 'mouse', 'mouse'],
-                                            ['1.46.1', '1.37.0', '1.37.0', '1.46.1'],
-                                            ['names', 'names', 'names', 'count_table']
-                                            )
-            for method in ['vdgc', 'cvsearch']
-            ]
+        tsv=expand('results/mothur-{version}_{filetype}/{method}/{dataset}.{method}.tsv',
+                    dataset = datasets,
+                    version = versions,
+                    filetype = filetypes,
+                    method = methods
+                    )
     output:
         tsv='results/sensspec_concat.tsv'
     script:
@@ -52,7 +55,8 @@ rule unique_count:
         fna='data/{dataset}.fasta'
     output:
         fna='data/proc/{dataset}.unique.fasta',
-        count_table='data/proc/{dataset}.unique.count_table'
+        names='data/proc/{dataset}.names',
+        count_table='data/proc/{dataset}.count_table'
     params:
         outdir='data/proc/'
     log:
