@@ -94,7 +94,7 @@ rule prep_list:
         mothur "#set.logfile(name={log});
                 set.dir(input=data/, output={params.outdir});
                 list.seqs(count={input.count_table});
-                get.seqs(list={input.list}, accnos=current);
+                get.seqs(list={input.list}, accnos=current)
                 "
         """
 
