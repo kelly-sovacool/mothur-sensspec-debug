@@ -84,8 +84,8 @@ rule copy_proc_files:
     shell:
         """
         cp {input.c} {output.c}
-        #cp {input.d} {output.d}
         """
+        #cp {input.d} {output.d}
 
 rule prep_list:
     input:
