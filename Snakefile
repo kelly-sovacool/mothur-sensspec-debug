@@ -55,7 +55,6 @@ rule unique_count:
         fna='data/{dataset}.fasta'
     output:
         fna='data/proc/{dataset}.unique.fasta',
-        dist='data/proc/{dataset}.unique.dist',
         names='data/proc/{dataset}.names',
         count_table='data/proc/{dataset}.count_table'
     params:
@@ -69,7 +68,6 @@ rule unique_count:
         mothur "#set.logfile(name={log});
                 set.dir(input=data/, output={params.outdir});
                 unique.seqs(fasta={input.fna});
-                dist.seqs(fasta=current, processors={resources.procs});
                 count.seqs(name=current)
                 "
         """
