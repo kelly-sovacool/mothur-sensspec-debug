@@ -1,7 +1,7 @@
 library(tidyverse)
 
 summary_dat <- read_tsv(snakemake@input[['summary']]) %>%
-    mutate(sobs = double(sobs) %>%
+    mutate(sobs = double(sobs)) %>%
     rename(num_otus = sobs)
 
 read_tsv(snakemake@input[['sensspec']]) %>%
