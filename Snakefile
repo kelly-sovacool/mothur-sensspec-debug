@@ -69,7 +69,7 @@ rule unique_count:
         mothur "#set.logfile(name={log});
                 set.dir(input=data/, output={params.outdir});
                 unique.seqs(fasta={input.fna});
-                dist.seqs(fasta=current; processors={resources.procs});
+                dist.seqs(fasta=current, processors={resources.procs});
                 count.seqs(name=current)
                 "
         """
