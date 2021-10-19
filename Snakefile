@@ -77,14 +77,14 @@ rule unique_count:
 rule copy_proc_files:
     input:
         c='data/proc/{dataset}.ng.count_table',
-        d='data/proc/{dataset}.ng.unique.dist'
+        #d='data/proc/{dataset}.ng.unique.dist'
     output:
         c='data/{dataset}.count_table',
-        d='data/{dataset}.dist'
+        #d='data/{dataset}.dist'
     shell:
         """
         cp {input.c} {output.c}
-        cp {input.d} {output.d}
+        #cp {input.d} {output.d}
         """
 
 rule prep_list:
