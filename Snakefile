@@ -55,28 +55,37 @@ rule unique_count:
         fna='data/{dataset}.fasta'
     output:
         fna='data/proc/{dataset}.unique.fasta',
+        dist='data/proc/{dataset}.unique.dist',
         names='data/proc/{dataset}.names',
         count_table='data/proc/{dataset}.count_table'
     params:
         outdir='data/proc/'
     log:
         'log/unique_count.{dataset}.log'
+    resources:
+        procs=16
     shell:
         """
         mothur "#set.logfile(name={log});
                 set.dir(input=data/, output={params.outdir});
                 unique.seqs(fasta={input.fna});
+                dist.seqs(fasta=current; processors={resources.procs});
                 count.seqs(name=current)
                 "
         """
 
-rule copy_count:
+rule copy_proc_files:
     input:
-        'data/proc/{dataset}.ng.count_table'
+        c='data/proc/{dataset}.ng.count_table',
+        d='data/proc/{dataset}.ng.unique.dist'
     output:
-        'data/{dataset}.count_table'
+        c='data/{dataset}.count_table',
+        d='data/{dataset}.dist'
     shell:
-        "cp {input} {output}"
+        """
+        cp {input.c} {output.c}
+        cp {input.d} {output.d}
+        """
 
 rule prep_list:
     input:
