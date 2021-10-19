@@ -105,7 +105,6 @@ rule sensspec_count:
         dist='data/{dataset}.unique.dist'
     output:
         accnos='results/mothur-{version}_count_table/{method}/{dataset}.accnos',
-        list='results/mothur-{version}_count_table/{method}/{dataset}.{method}.userLabel.pick.list',
         tsv='results/mothur-{version}_count_table/{method}/{dataset}.{method}.sensspec'
     params:
         outdir='results/mothur-{version}_count_table/{method}/',
